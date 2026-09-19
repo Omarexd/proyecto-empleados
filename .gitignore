@@ -1,0 +1,16 @@
+# Maven
+target/
+**/target/
+
+# Eclipse
+.metadata/
+.settings/
+.classpath
+.project
+
+# Archivos compilados
+*.class
+
+# Sistema
+.DS_Store
+Thumbs.db
