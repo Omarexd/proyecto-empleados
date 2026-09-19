@@ -273,22 +273,23 @@ public class VentanaPrincipal extends JFrame {
         gbc.gridy = fila++;
         panel.add(btnEliminar, gbc);
 
-        btnLimpiar =
-                new JButton("Limpiar");
+        btnLimpiar = new JButton("Limpiar");
 
+        gbc.weighty = 0;
+        gbc.insets = new Insets(4, 8, 2, 8);
         gbc.gridy = fila++;
         panel.add(btnLimpiar, gbc);
 
-        gbc.gridy = fila;
-        gbc.weighty = 1;
-        panel.add(
-                Box.createVerticalGlue(),
-                gbc
-        );
         btnVerTotales = new JButton("Ver totales");
 
+        gbc.weighty = 0;
+        gbc.insets = new Insets(2, 8, 4, 8);
         gbc.gridy = fila++;
         panel.add(btnVerTotales, gbc);
+
+        gbc.gridy = fila;
+        gbc.weighty = 1;
+        panel.add(Box.createVerticalGlue(), gbc);
 
         return panel;
     }
@@ -971,5 +972,53 @@ public class VentanaPrincipal extends JFrame {
         }
 
         return false;
+    }
+    private void mostrarTotales() {
+
+        try {
+
+            List<Empleado> empleados = empleadoDAO.listarTodos();
+
+            if (empleados.isEmpty()) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "No hay empleados registrados para calcular los totales.",
+                        "Totales",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+
+                return;
+            }
+
+            BigDecimal total = BigDecimal.ZERO;
+
+            for (Empleado empleado : empleados) {
+                total = total.add(empleado.getSalario());
+            }
+
+            BigDecimal promedio = total.divide(
+                    BigDecimal.valueOf(empleados.size()),
+                    2,
+                    RoundingMode.HALF_UP
+            );
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Total de salarios: Q " + total.toPlainString()
+                    + "\nPromedio de salarios: Q " + promedio.toPlainString(),
+                    "Totales de salarios",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+        } catch (SQLException e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudieron calcular los totales.\n" + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 }
