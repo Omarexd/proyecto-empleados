@@ -17,11 +17,11 @@ public class EmpleadoDAO {
 
 	public Empleado crear(Empleado empleado) throws SQLException {
 
-	    String sql = """
-	            INSERT INTO empleados
-	            (nombre_completo, departamento, salario, fecha_contratacion, activo)
-	            VALUES (?, ?, ?, ?, ?)
-	            """;
+		String sql = """
+		        INSERT INTO empleados
+		        (nombre_completo, departamento, salario, fecha_contratacion, activo, tipo_contrato)
+		        VALUES (?, ?, ?, ?, ?, ?)
+		        """;
 
 	    try (Connection conexion = ConexionBD.obtenerConexion();
 	         PreparedStatement ps = conexion.prepareStatement(
@@ -32,6 +32,7 @@ public class EmpleadoDAO {
 	        ps.setBigDecimal(3, empleado.getSalario());
 	        ps.setDate(4, java.sql.Date.valueOf(empleado.getFechaContratacion()));
 	        ps.setBoolean(5, empleado.isActivo());
+	        ps.setString(6, empleado.getTipoContrato());
 
 	        ps.executeUpdate();
 
@@ -48,12 +49,12 @@ public class EmpleadoDAO {
 
 	public List<Empleado> listarTodos() throws SQLException {
 
-	    String sql = """
-	            SELECT id, nombre_completo, departamento, salario,
-	                   fecha_contratacion, activo
-	            FROM empleados
-	            ORDER BY id
-	            """;
+		String sql = """
+		        SELECT id, nombre_completo, departamento, salario,
+		               fecha_contratacion, activo, tipo_contrato
+		        FROM empleados
+		        ORDER BY id
+		        """;
 
 	    List<Empleado> empleados = new ArrayList<>();
 
@@ -63,14 +64,15 @@ public class EmpleadoDAO {
 
 	        while (rs.next()) {
 
-	            Empleado empleado = new Empleado(
-	                    rs.getInt("id"),
-	                    rs.getString("nombre_completo"),
-	                    rs.getString("departamento"),
-	                    rs.getBigDecimal("salario"),
-	                    rs.getDate("fecha_contratacion").toLocalDate(),
-	                    rs.getBoolean("activo")
-	            );
+	        	Empleado empleado = new Empleado(
+	        	        rs.getInt("id"),
+	        	        rs.getString("nombre_completo"),
+	        	        rs.getString("departamento"),
+	        	        rs.getBigDecimal("salario"),
+	        	        rs.getDate("fecha_contratacion").toLocalDate(),
+	        	        rs.getBoolean("activo"),
+	        	        rs.getString("tipo_contrato")
+	        	);
 
 	            empleados.add(empleado);
 	        }
@@ -81,12 +83,12 @@ public class EmpleadoDAO {
 
 	public Optional<Empleado> buscarPorId(int id) throws SQLException {
 
-	    String sql = """
-	            SELECT id, nombre_completo, departamento, salario,
-	                   fecha_contratacion, activo
-	            FROM empleados
-	            WHERE id = ?
-	            """;
+		String sql = """
+		        SELECT id, nombre_completo, departamento, salario,
+		               fecha_contratacion, activo, tipo_contrato
+		        FROM empleados
+		        WHERE id = ?
+		        """;
 
 	    try (Connection conexion = ConexionBD.obtenerConexion();
 	         PreparedStatement ps = conexion.prepareStatement(sql)) {
@@ -97,14 +99,15 @@ public class EmpleadoDAO {
 
 	            if (rs.next()) {
 
-	                Empleado empleado = new Empleado(
-	                        rs.getInt("id"),
-	                        rs.getString("nombre_completo"),
-	                        rs.getString("departamento"),
-	                        rs.getBigDecimal("salario"),
-	                        rs.getDate("fecha_contratacion").toLocalDate(),
-	                        rs.getBoolean("activo")
-	                );
+	            	Empleado empleado = new Empleado(
+	            	        rs.getInt("id"),
+	            	        rs.getString("nombre_completo"),
+	            	        rs.getString("departamento"),
+	            	        rs.getBigDecimal("salario"),
+	            	        rs.getDate("fecha_contratacion").toLocalDate(),
+	            	        rs.getBoolean("activo"),
+	            	        rs.getString("tipo_contrato")
+	            	);
 
 	                return Optional.of(empleado);
 	            }
@@ -116,25 +119,27 @@ public class EmpleadoDAO {
 
 	public boolean actualizar(Empleado empleado) throws SQLException {
 
-	    String sql = """
-	            UPDATE empleados
-	            SET nombre_completo = ?,
-	                departamento = ?,
-	                salario = ?,
-	                fecha_contratacion = ?,
-	                activo = ?
-	            WHERE id = ?
-	            """;
+		String sql = """
+		        UPDATE empleados
+		        SET nombre_completo = ?,
+		            departamento = ?,
+		            salario = ?,
+		            fecha_contratacion = ?,
+		            activo = ?,
+		            tipo_contrato = ?
+		        WHERE id = ?
+		        """;
 
 	    try (Connection conexion = ConexionBD.obtenerConexion();
 	         PreparedStatement ps = conexion.prepareStatement(sql)) {
 
-	        ps.setString(1, empleado.getNombreCompleto());
-	        ps.setString(2, empleado.getDepartamento());
-	        ps.setBigDecimal(3, empleado.getSalario());
-	        ps.setDate(4, java.sql.Date.valueOf(empleado.getFechaContratacion()));
-	        ps.setBoolean(5, empleado.isActivo());
-	        ps.setInt(6, empleado.getId());
+	    	ps.setString(1, empleado.getNombreCompleto());
+	    	ps.setString(2, empleado.getDepartamento());
+	    	ps.setBigDecimal(3, empleado.getSalario());
+	    	ps.setDate(4, java.sql.Date.valueOf(empleado.getFechaContratacion()));
+	    	ps.setBoolean(5, empleado.isActivo());
+	    	ps.setString(6, empleado.getTipoContrato());
+	    	ps.setInt(7, empleado.getId());
 
 	        int filasAfectadas = ps.executeUpdate();
 

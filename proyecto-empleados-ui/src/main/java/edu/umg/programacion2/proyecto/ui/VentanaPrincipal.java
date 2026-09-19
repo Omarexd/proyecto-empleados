@@ -1,6 +1,7 @@
 package edu.umg.programacion2.proyecto.ui;
 
 import java.awt.BorderLayout;
+import javax.swing.JComboBox;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
@@ -51,6 +52,7 @@ public class VentanaPrincipal extends JFrame {
     private DefaultTableModel modeloTabla;
     private EmpleadoDAO empleadoDAO;
     private JLabel lblTotalEmpleados;
+    private JComboBox<String> cmbTipoContrato;
     
 
     public VentanaPrincipal() {
@@ -219,6 +221,17 @@ public class VentanaPrincipal extends JFrame {
                         11
                 )
         );
+        JLabel lblTipoContrato =
+                new JLabel("Tipo de contrato:");
+
+        gbc.gridy = fila++;
+        panel.add(lblTipoContrato, gbc);
+
+        cmbTipoContrato =
+                new JComboBox<>(TIPOS_CONTRATO);
+
+        gbc.gridy = fila++;
+        panel.add(cmbTipoContrato, gbc);
 
         gbc.gridy = fila++;
         panel.add(ayudaFecha, gbc);
@@ -288,6 +301,7 @@ public class VentanaPrincipal extends JFrame {
                 "Departamento",
                 "Salario",
                 "Fecha contratación",
+                "Tipo contrato",
                 "Activo"
         };
 
@@ -359,14 +373,15 @@ public class VentanaPrincipal extends JFrame {
 
         	for (Empleado empleado : empleadoDAO.listarTodos()) {
 
-        	    Object[] fila = {
-        	            empleado.getId(),
-        	            empleado.getNombreCompleto(),
-        	            empleado.getDepartamento(),
-        	            "Q " + empleado.getSalario().toPlainString(),
-        	            empleado.getFechaContratacion(),
-        	            empleado.isActivo() ? "Activo" : "Inactivo"
-        	    };
+        		Object[] fila = {
+        		        empleado.getId(),
+        		        empleado.getNombreCompleto(),
+        		        empleado.getDepartamento(),
+        		        "Q " + empleado.getSalario().toPlainString(),
+        		        empleado.getFechaContratacion(),
+        		        empleado.getTipoContrato(),
+        		        empleado.isActivo() ? "Activo" : "Inactivo"
+        		};
 
         	    modeloTabla.addRow(fila);
         	}
@@ -506,6 +521,8 @@ public class VentanaPrincipal extends JFrame {
         String salarioTexto = txtSalario.getText().trim();
         String fechaTexto = txtFecha.getText().trim();
         boolean activo = chkActivo.isSelected();
+        String tipoContrato =
+                cmbTipoContrato.getSelectedItem().toString();
 
         if (nombre.isEmpty()) {
             JOptionPane.showMessageDialog(
@@ -546,6 +563,17 @@ public class VentanaPrincipal extends JFrame {
             );
             return;
         }
+        if (!tipoContratoValido(tipoContrato)) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccione un tipo de contrato válido.",
+                    "Validación",
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            return;
+        }
 
         try {
 
@@ -578,7 +606,8 @@ public class VentanaPrincipal extends JFrame {
                     departamento,
                     salario,
                     fechaContratacion,
-                    activo
+                    activo,
+                    tipoContrato
             );
 
             empleadoDAO.crear(empleado);
@@ -631,6 +660,8 @@ public class VentanaPrincipal extends JFrame {
         tablaEmpleados.clearSelection();
 
         txtNombre.requestFocus();
+        
+        cmbTipoContrato.setSelectedIndex(0);
     }
     private void cargarEmpleadoSeleccionado() {
 
@@ -659,11 +690,16 @@ public class VentanaPrincipal extends JFrame {
                 modeloTabla.getValueAt(fila, 4).toString()
         );
 
-        String estado = modeloTabla.getValueAt(fila, 5).toString();
+        String estado =
+                modeloTabla.getValueAt(fila, 6).toString();
 
         chkActivo.setSelected(
                 estado.equals("Activo")
         );
+        String tipoContrato =
+                modeloTabla.getValueAt(fila, 5).toString();
+
+        cmbTipoContrato.setSelectedItem(tipoContrato);
     }
     private void actualizarEmpleado() {
 
@@ -690,6 +726,8 @@ public class VentanaPrincipal extends JFrame {
         String salarioTexto = txtSalario.getText().trim();
         String fechaTexto = txtFecha.getText().trim();
         boolean activo = chkActivo.isSelected();
+        String tipoContrato =
+                cmbTipoContrato.getSelectedItem().toString();
 
         if (nombre.isEmpty()) {
 
@@ -738,6 +776,17 @@ public class VentanaPrincipal extends JFrame {
 
             return;
         }
+        if (!tipoContratoValido(tipoContrato)) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccione un tipo de contrato válido.",
+                    "Validación",
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            return;
+        }
 
         try {
 
@@ -775,7 +824,8 @@ public class VentanaPrincipal extends JFrame {
                     departamento,
                     salario,
                     fechaContratacion,
-                    activo
+                    activo,
+                    tipoContrato
             );
 
             boolean actualizado = empleadoDAO.actualizar(empleado);
@@ -894,5 +944,21 @@ public class VentanaPrincipal extends JFrame {
                     JOptionPane.ERROR_MESSAGE
             );
         }
+    }
+    private static final String[] TIPOS_CONTRATO = {
+            "Temporal",
+            "Permanente",
+            "Por hora"
+    };
+    private boolean tipoContratoValido(String tipoContrato) {
+
+        for (String tipo : TIPOS_CONTRATO) {
+
+            if (tipo.equals(tipoContrato)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

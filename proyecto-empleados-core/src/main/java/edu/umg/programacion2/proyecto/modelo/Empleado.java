@@ -11,19 +11,22 @@ public class Empleado {
     private BigDecimal salario;
     private LocalDate fechaContratacion;
     private boolean activo;
+    private String tipoContrato;
 
     public Empleado(String nombreCompleto, String departamento, BigDecimal salario,
-            LocalDate fechaContratacion, boolean activo) {
+            LocalDate fechaContratacion, boolean activo, String tipoContrato) {
 
         this.nombreCompleto = nombreCompleto;
         this.departamento = departamento;
         this.salario = salario;
         this.fechaContratacion = fechaContratacion;
         this.activo = activo;
+        this.tipoContrato = tipoContrato;
     }
 
     public Empleado(int id, String nombreCompleto, String departamento,
-            BigDecimal salario, LocalDate fechaContratacion, boolean activo) {
+            BigDecimal salario, LocalDate fechaContratacion, boolean activo,
+            String tipoContrato) {
 
         this.id = id;
         this.nombreCompleto = nombreCompleto;
@@ -31,8 +34,17 @@ public class Empleado {
         this.salario = salario;
         this.fechaContratacion = fechaContratacion;
         this.activo = activo;
+        this.tipoContrato = tipoContrato;
     }
 
+    public String getTipoContrato() {
+        return tipoContrato;
+    }
+
+    public void setTipoContrato(String tipoContrato) {
+        this.tipoContrato = tipoContrato;
+    }
+    
     public int getId() {
         return id;
     }

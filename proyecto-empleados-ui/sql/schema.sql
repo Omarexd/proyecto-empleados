@@ -34,6 +34,7 @@ CREATE TABLE empleados (
     salario DECIMAL(10,2) NOT NULL,
     fecha_contratacion DATE NOT NULL,
     activo BOOLEAN NOT NULL DEFAULT TRUE,
-
+    tipo_contrato VARCHAR(20) NOT NULL DEFAULT 'Permanente',
+	
     CHECK (salario > 0)
 );
