@@ -416,6 +416,13 @@ public class VentanaPrincipal extends JFrame {
         Color rojo = new Color(220, 70, 70);
         Color gris = new Color(225, 230, 235);
         Color fondoTabla = new Color(250, 250, 250);
+        Color verde = new Color(46, 160, 90);
+        
+        //Ver totales 
+        btnVerTotales.setBackground(verde);
+        btnVerTotales.setForeground(Color.WHITE);
+        btnVerTotales.setFont(new Font("SansSerif", Font.BOLD, 14));
+        btnVerTotales.setFocusPainted(false);
 
         // Campos
         txtNombre.setFont(new Font("SansSerif", Font.PLAIN, 14));
