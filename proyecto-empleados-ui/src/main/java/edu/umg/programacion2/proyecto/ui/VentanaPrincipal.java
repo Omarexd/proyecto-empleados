@@ -1,6 +1,7 @@
 package edu.umg.programacion2.proyecto.ui;
 
 import java.awt.BorderLayout;
+
 import javax.swing.JComboBox;
 import java.awt.GridLayout;
 
@@ -29,6 +30,8 @@ import javax.swing.BoxLayout;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 import javax.swing.table.JTableHeader;
+import java.math.RoundingMode;
+import java.util.List;
 
 import edu.umg.programacion2.proyecto.dao.EmpleadoDAO;
 import edu.umg.programacion2.proyecto.modelo.Empleado;
@@ -47,12 +50,14 @@ public class VentanaPrincipal extends JFrame {
     private JButton btnActualizar;
     private JButton btnEliminar;
     private JButton btnLimpiar;
+    private JButton btnVerTotales;
 
     private JTable tablaEmpleados;
     private DefaultTableModel modeloTabla;
     private EmpleadoDAO empleadoDAO;
     private JLabel lblTotalEmpleados;
     private JComboBox<String> cmbTipoContrato;
+    
     
 
     public VentanaPrincipal() {
@@ -280,6 +285,10 @@ public class VentanaPrincipal extends JFrame {
                 Box.createVerticalGlue(),
                 gbc
         );
+        btnVerTotales = new JButton("Ver totales");
+
+        gbc.gridy = fila++;
+        panel.add(btnVerTotales, gbc);
 
         return panel;
     }
@@ -506,6 +515,8 @@ public class VentanaPrincipal extends JFrame {
         btnEliminar.addActionListener(e -> eliminarEmpleado());
 
         btnLimpiar.addActionListener(e -> limpiarFormulario());
+        
+        btnVerTotales.addActionListener(e -> mostrarTotales());
 
         tablaEmpleados.getSelectionModel().addListSelectionListener(e -> {
 
